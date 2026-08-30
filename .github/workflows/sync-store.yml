@@ -1,0 +1,64 @@
+name: Sync store
+
+# Replaces the former Deno Deploy cron job: build the store JSON from the
+# organisation repositories and publish it to the public Gist read by Telmi-Sync.
+on:
+  schedule:
+    # Once a day, 04:37 UTC. Off-peak for GitHub Actions, and deliberately not on
+    # the hour: scheduled runs are delayed or dropped when the queue is loaded,
+    # which it is at the start of every hour.
+    - cron: '37 4 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build the store but do not publish it to the Gist'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/sync-store.mjs'
+      - '.github/workflows/sync-store.yml'
+
+concurrency:
+  group: sync-store
+  cancel-in-progress: false
+
+permissions:
+  # The job commits the versioned copy of the store back to the repository.
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build and publish the store
+        id: sync
+        env:
+          # Only used to raise the GitHub API rate limit while reading the organisation.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Personal access token with the "gist" scope, owner of the target Gist.
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: node .github/scripts/sync-store.mjs ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      # Skipped when history is turned off in the script configuration.
+      # The commit is otherwise always made, even when nothing changed: GitHub
+      # disables scheduled workflows in public repositories after 60 days without
+      # any repository activity, and this store changes too rarely to rely on a
+      # content diff to keep that timer alive.
+      - name: Commit the store snapshot
+        if: ${{ !inputs.dry_run && steps.sync.outputs.history == 'true' }}
+        env:
+          COMMIT_MESSAGE: ${{ steps.sync.outputs.commit_message }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add store
+          git commit --allow-empty -m "$COMMIT_MESSAGE"
+          git push
