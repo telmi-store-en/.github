@@ -1,0 +1,30 @@
+{
+  "banner": {
+    "image": "https://raw.githubusercontent.com/telmi-store-en/.github/main/profile/banner-telmi.jpg",
+    "background": "#2e144b",
+    "link": "https://discord.gg/ZTA5FyERbg"
+  },
+  "data": [
+    {
+      "age": 4,
+      "title": "BedtimeFM Storytime",
+      "description": "# [4+] BedtimeFM Storytime (EN)\n\nDo your children like listening to a story? Story Time has lots of great stories for everyone to listen to.\n\nEach story is usually less than 20 minutes long, hopefully just long enough to keep your toddler, preschoolers, and little ones engaged. Story Time is a free audiobook podcast for children ages 2-13.",
+      "thumbs": {
+        "small": "https://raw.githubusercontent.com/telmi-store-en/bedtimefm-storytime/main/thumbnail.jpg",
+        "medium": "https://raw.githubusercontent.com/telmi-store-en/bedtimefm-storytime/main/thumbnail.jpg"
+      },
+      "download": "https://github.com/telmi-store-en/bedtimefm-storytime/releases/download/latest/bedtimefm_storytime.zip",
+      "download_count": 9,
+      "awards": [],
+      "created_at": "2025-11-24T01:08:18Z",
+      "updated_at": "2025-11-24T01:08:18Z",
+      "author": "BedtimeFM",
+      "voice": "BedtimeFM",
+      "designer": "Heuzef",
+      "publisher": "Telmi Interactive",
+      "category": "Story",
+      "version": "1",
+      "license": "Creative Commons: By Attribution 3.0"
+    }
+  ]
+}
