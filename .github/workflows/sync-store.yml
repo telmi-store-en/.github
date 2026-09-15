@@ -4,10 +4,10 @@ name: Sync store
 # organisation repositories and publish it to the public Gist read by Telmi-Sync.
 on:
   schedule:
-    # Once a day, 04:37 UTC. Off-peak for GitHub Actions, and deliberately not on
+    # Friday, 04:37 UTC. Off-peak for GitHub Actions, and deliberately not on
     # the hour: scheduled runs are delayed or dropped when the queue is loaded,
     # which it is at the start of every hour.
-    - cron: '37 4 * * *'
+    - cron: '37 4 * * 5'
   workflow_dispatch:
     inputs:
       dry_run:
